@@ -1,0 +1,22 @@
+global current_hour_total_number_transaction = 0
+global last_hour_transaction_count = get_from_db()
+
+// call this for every transaction
+function check_single_transaction_threshold() {
+    max_amount_for_single_transaction = 100000
+    if (new_transaction > max_amount_for_single_transaction)
+        send_warning()
+
+    current_hour_total_number_transaction++
+
+    tolerable_transaction_traffic_spike = 10 * last_hour_transaction_count
+    if (current_hour_total_number_transaction > tolerable_transaction_traffic_spike)
+        send_warning()
+}
+
+// use cron job to call this function every hour
+function set_hourly_parameters() {
+    last_hour_transaction_count = get_from_db()
+    current_hour_total_number_transaction = 0
+}
+
